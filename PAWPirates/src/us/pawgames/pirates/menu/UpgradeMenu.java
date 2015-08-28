@@ -26,7 +26,7 @@ public class UpgradeMenu {
 	}
 	
 	private ArrayList<CraftChunk> getPlayerStructures() {
-		
+		return null;
 	}
 	
 	public Inventory getInventory() {return this.inventory;}
