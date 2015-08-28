@@ -1,0 +1,14 @@
+name: PAWPirates
+version: 1.0.0
+main: us.pawgames.pirates.Main
+commands:
+  pirates:
+    usage: /<command>
+    description: Opens pirates user GUI
+    aliases: [pirate]
+    permission: pirates.user.gui
+  piratesadmin:
+    usage: /<command> help
+    description: Use /piratesadmin help
+    aliases: [pirateadmin, padmin, pa]
+    permission: pirates.admin.help
