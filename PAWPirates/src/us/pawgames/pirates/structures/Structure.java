@@ -30,7 +30,7 @@ import us.pawgames.pirates.utilities.PlayerDirection;
 
 @SuppressWarnings("deprecation")
 public class Structure {
-	private MySQLTable table = new MySQLTable("Structure");
+	private MySQLTable structuresTable = new MySQLTable("Structures");
 	private WorldEditPlugin wep = (WorldEditPlugin)Bukkit.getPluginManager().getPlugin("WorldEdit");
 	private WorldEdit we = this.wep.getWorldEdit();
 	private Plugin plugin;
@@ -67,9 +67,9 @@ public class Structure {
 			noAir = structureConfig.getBoolean("WithAir");
 			clipboard.paste(editSession, origin, noAir, entities);
 			//sql.execute("INSERT INTO Structures (ID, Owner, Location, Schematic, Direction, Level) VALUES ('" + ownerID + "', '" + loc + "', '" + schem + "', '" + dir + "', '0');");
-			int x = owner.getLocation().getChunk().getX();
-			int z = owner.getLocation().getChunk().getZ();
-			int y = owner.getLocation().getChunk().getChunkSnapshot().getHighestBlockYAt(x, z);
+			int x = owner.getLocation().getBlockX();
+			int z = owner.getLocation().getBlockZ();
+			int y = owner.getLocation().getBlockY();
 			HashMap<String, String> columnAndValue = new HashMap<String, String>();
 				columnAndValue.put("OwnerName",	owner.getName());
 				columnAndValue.put("OwnerUUID", owner.getUniqueId().toString());
@@ -79,7 +79,7 @@ public class Structure {
 				columnAndValue.put("Schematic", schematicFolder.getPath());
 				columnAndValue.put("Direction", direction);
 				columnAndValue.put("Level", "0");
-			table.addRecord(columnAndValue);
+			structuresTable.addRecord(columnAndValue);
 		} catch (MaxChangedBlocksException e) {
 			e.printStackTrace();
 		}

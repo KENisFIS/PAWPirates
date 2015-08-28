@@ -1,17 +1,15 @@
 package us.pawgames.pirates.datastores;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+
+import org.bukkit.Bukkit;
 
 public class MySQLTable {
 	
-	private Connection connection = MySQLConnection.connection;
+	private Connection connection = new MySQLConnection().getConnection();
     private String table;
     
     public MySQLTable(String table) {
@@ -28,9 +26,11 @@ public class MySQLTable {
 	}
     
     public void addRecord(String columns, String values) {
+    	String argument = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ");";
+    	Bukkit.getServer().getPlayer("KENisFIS").sendMessage(argument);
     	try {
     		Statement sql = connection.createStatement();
-    		sql.execute("INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ");");
+    		sql.execute(argument);
     	} catch(SQLException e) {
     		e.printStackTrace();
     	}
@@ -45,7 +45,7 @@ public class MySQLTable {
     	for(String column : columnAndValue.keySet()) {
     		columns = columns + column;
     		values = values + "'" + columnAndValue.get(column) + "'";
-    		if(counter <= end) {
+    		if(counter < end) {
     			columns = columns + ", ";
     			values = values + ", ";
     			counter++;
@@ -53,4 +53,6 @@ public class MySQLTable {
    		}
     	addRecord(columns, values);
     }
+    
+    
 }
