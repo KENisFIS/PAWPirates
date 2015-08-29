@@ -1,6 +1,7 @@
 package us.pawgames.pirates.datastores;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -54,5 +55,16 @@ public class MySQLTable {
     	addRecord(columns, values);
     }
     
-    
+    public ResultSet getRecord(String sql) {
+    	//HashMap<String, String> record = new HashMap<String, String>();
+    	ResultSet results = null;
+    	try {
+			Statement statement = connection.createStatement();
+			results = statement.executeQuery(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return results;
+    }
 }

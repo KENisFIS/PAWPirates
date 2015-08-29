@@ -8,17 +8,21 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.RegionSelection;
+import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.util.io.file.FilenameException;
 import com.sk89q.worldedit.world.DataException;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -73,6 +77,8 @@ public class Structure {
 			HashMap<String, String> columnAndValue = new HashMap<String, String>();
 				columnAndValue.put("OwnerName",	owner.getName());
 				columnAndValue.put("OwnerUUID", owner.getUniqueId().toString());
+				columnAndValue.put("ChunkX", "" + owner.getLocation().getChunk().getX());
+				columnAndValue.put("ChunkZ", "" + owner.getLocation().getChunk().getZ());
 				columnAndValue.put("LocationX", "" + x);
 				columnAndValue.put("LocationY", "" + y);
 				columnAndValue.put("LocationZ", "" + z);
@@ -118,6 +124,7 @@ public class Structure {
 		}
 		return clipboard;
 	}
+	
 	
 	
 	private void setOrigin() {
