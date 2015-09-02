@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
 import us.pawgames.pirates.datastores.MySQLConnection;
 import us.pawgames.pirates.datastores.MySQLTable;
 import us.pawgames.pirates.utilities.PlayerDirection;
@@ -82,6 +84,7 @@ public class Structure {
 				columnAndValue.put("LocationX", "" + x);
 				columnAndValue.put("LocationY", "" + y);
 				columnAndValue.put("LocationZ", "" + z);
+				columnAndValue.put("Type", schematicFolder.getName());
 				columnAndValue.put("Schematic", schematicFolder.getPath());
 				columnAndValue.put("Direction", direction);
 				columnAndValue.put("Level", "0");
@@ -125,11 +128,6 @@ public class Structure {
 		return clipboard;
 	}
 	
-	
-	
-	private void setOrigin() {
-		
-	}
 	
 	private void setClipboard(String level) {
 		try {

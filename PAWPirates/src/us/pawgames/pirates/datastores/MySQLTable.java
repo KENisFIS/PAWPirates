@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -55,16 +56,32 @@ public class MySQLTable {
     	addRecord(columns, values);
     }
     
-    public ResultSet getRecord(String sql) {
-    	//HashMap<String, String> record = new HashMap<String, String>();
+    public ArrayList<HashMap<String, String>> getRecord(ArrayList<String> columnsToGet, String whereSQL) {
+    	HashMap<String, String> record = new HashMap<String, String>();
+    	ArrayList<HashMap<String, String>> records = new ArrayList<HashMap<String, String>>();
+    	String sql = "SELECT ";
+    	int counter = 1;
+    	int end = columnsToGet.size();
+    	for(String column: columnsToGet) {
+    		if(counter < end) {
+    			sql = sql + column + ", ";
+    		}
+    		sql = sql + column + " FROM " + table + " " + whereSQL + ";";
+    	}
     	ResultSet results = null;
     	try {
 			Statement statement = connection.createStatement();
 			results = statement.executeQuery(sql);
+			while(results.next()) {
+				for(String key : columnsToGet) {
+					record.put(key, results.getString(key));
+				}
+				records.add(record);
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	return results;
+    	return records;
     }
 }

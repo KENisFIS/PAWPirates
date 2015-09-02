@@ -1,24 +1,22 @@
 package us.pawgames.pirates.menu;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R1.CraftChunk;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
-import us.pawgames.pirates.datastores.MySQLConnection;
+import us.pawgames.pirates.datastores.MySQLTable;
 
 public class UpgradeMenu {
 	private Inventory inventory;
-	private Connection connection = new MySQLConnection().getConnection();
+	private MySQLTable structureTable = new MySQLTable("Structures");
 	private Player player;
 	
 	public UpgradeMenu(Plugin plugin, Player player) {
@@ -26,24 +24,33 @@ public class UpgradeMenu {
 		int rows = 2;
 		this.inventory = Bukkit.createInventory(null, rows * 9, "PIRATES - Upgrade Structure Menu");
 		int slot = 0;
-		MenuItem menuItem = new MenuItem(Material.BOOK, this.inventory, slot, ChatColor.BOLD + "foo");
-		menuItem.makeItem();
+		ArrayList<HashMap<String, String>> playerStructures = getPlayerStructures();
+		
+		for(HashMap<String, String> playerStructure: playerStructures) {
+			String structureFolder = playerStructure.get("Schematic");
+			String structureType = playerStructure.get("Type");
+			String structureLevel = playerStructure.get("Level");
+			
+			File folder = new File(structureFolder);
+			File yaml = new File(folder, "properties.yml");
+			YamlConfiguration properties = YamlConfiguration.loadConfiguration(yaml);
+			
+			String menuIcon = properties.getString("MenuIcon");
+			
+			MenuItem menuItem = new MenuItem(Material.getMaterial(menuIcon), this.inventory, slot, ChatColor.BOLD + "" + ChatColor.AQUA + structureType);
+					menuItem.addLoreEntry(ChatColor.RED + "Current Level: " + ChatColor.WHITE + structureLevel + ChatColor.RED + " Current Production: " + ChatColor.WHITE + properties.getString("ProfitAt.Level" + structureLevel));
+					menuItem.makeItem();
+					
+			
+		}
 	}
 	
-	private ArrayList<Object> getPlayerStructures() {
-		Statement statement = connection.createStatement();
-		String sql = "SELECT * FROM Structures WHERE UserUUID='" + player.getUniqueId().toString() + "';";
-		try {
-			ResultSet results = statement.executeQuery(sql);
-			for(Object foo : results.) {
-				
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	private ArrayList<HashMap<String, String>> getPlayerStructures() {
+		ArrayList<String> columnsToGet = new ArrayList<String>();
+			columnsToGet.add("*");
+		String whereSQL = "WHERE UserUUID='" + player.getUniqueId().toString() + "'";
+		ArrayList<HashMap<String, String>> structures = structureTable.getRecord(columnsToGet, whereSQL);
+		return structures;
 	}
 	
 	public Inventory getInventory() {return this.inventory;}
